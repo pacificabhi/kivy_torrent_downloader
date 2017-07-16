@@ -1,0 +1,219 @@
+#: import sys sys
+<Home>:
+	BoxLayout:
+		id:q_box
+		orientation:'horizontal'
+		canvas:
+			Color:
+				rgba:1,.0,.0,.5
+			Rectangle:
+				size:self.size
+				pos:self.pos
+		size_hint:1,.08
+		pos_hint:{"x":0, "top":1}
+
+		TextInput:
+			canvas.after:
+				Color:
+					rgba:0,0,1,.3
+				Rectangle:
+					size:self.size
+					pos:self.pos
+			id:query
+			hint_text:"Search Torrent"
+			font_size:18
+			padding:5
+			multiline:False
+			size_hint:None,1
+			width:int(self.parent.width*.80)
+
+		Button:
+			text:"Find"
+			id:find
+			font_size:16
+			color:1,1,1,1
+			background_color:0,.4,0,1
+			background_normal:''
+			size_hint:None,1
+			width:int(self.parent.width*.12)
+			on_release:root.serch(query.text)
+
+		Button:
+			canvas.after:
+        		Rectangle:
+            		pos: self.pos
+            		size: self.size
+            		source: 'settings.png'
+
+			text:""
+			on_press:root.manager.current='settings_name'
+			size_hint:None,1
+			width:int(self.parent.width*.08)
+
+
+	BoxLayout:
+		id:r_box
+		orientation:'vertical'
+		canvas:
+			Color:
+				rgba:0,0,1,.5
+			Rectangle:
+				size:self.size
+				pos:self.pos
+		size_hint:1,.92
+		pos_hint:{"x":0, "bottom":1}
+
+		ScrollView:
+			BoxLayout:
+				orientation:'vertical'
+				cols:1
+				canvas.after:
+					Color:
+						rgba:0,0,1,.5
+					Rectangle:
+						size:self.size
+						pos:self.pos
+				id:res_stack
+				size_hint_y:None
+				height:self.minimum_height
+			
+<Settings>:
+	id:sett
+	ScrollView:
+		GridLayout:
+			cols:1
+			canvas:
+				Color:
+					rgba:1,1,1,.5
+				Rectangle:
+					size:self.size
+					pos:self.pos
+			id:settings_box
+
+			Button:
+				text:"Home"
+				on_press:root.manager.current='home_name'
+				size_hint:1,None
+				height:60
+
+			BoxLayout:
+				canvas.before:
+					Color:
+						rgba:.38,.42,.56,1
+					Rectangle:
+						size:self.size
+						pos:self.pos
+				
+				orientation:'horizontal'
+				size_hint:1,None
+				height:60
+				Label:
+					markup:True
+					font_size:24
+					color:1,.1,.1,1
+					text:"[s][b]Adult Mode[/b][/s]"
+					size_hint:None,1
+					width:int(self.parent.width*.7)
+				Switch:
+					id:adult
+					width:int(self.parent.width*.3)
+					size_hint:None,1
+					active:True
+					on_active:root.switch(self,self.active)
+
+
+<Details>:
+	GridLayout:
+		cols:2
+		rows:4
+		id:detail_box
+		canvas:
+			Color:
+				rgba:0,.0,1,.5
+			Rectangle:
+				size:self.size
+				pos:self.pos
+		size_hint:1,1
+		pos_hint:{"x":0,"top":1}
+
+		Label:
+			canvas.before:
+				Color:
+					rgba:0,0,1,.3
+				Rectangle:
+					size:self.size
+					pos:self.pos
+			id:ttl_lbl
+			text:"Details"
+			color:1,1,1,.6
+			font_size:18
+			size_hint:None,None
+			height:60
+			width:int(self.parent.width*.88)
+
+		Button:
+			text:"Back"
+			font_size:16
+			color:1,1,1,1
+			background_color:0,.3,0,1
+			background_normal:''
+			size_hint:None,None
+			height:60
+			width:int(self.parent.width*.12)
+			on_release:root.manager.current='home_name'
+
+		TextInput:
+			id:link_input
+			size_hint:None,None
+			size:int(self.parent.width*.88),80
+			text:"hello"
+
+		Button:
+			text:"Download"
+			font_size:16
+			color:1,1,1,1
+			background_color:0,.4,.8,.9
+			size_hint:None,None
+			height:80
+			width:int(self.parent.width*.12)
+			on_release:root.open_magnet()
+
+		Label:
+			id:size
+			font_size:16
+			color:1,1,1,1
+			background_color:0,.4,0,1
+			size_hint:None,None
+			height:80
+			width:int(self.parent.width*.88)
+
+		Label:
+			text:"Size"
+			font_size:16
+			color:1,1,1,1
+			background_color:0,.4,0,1
+			size_hint:None,None
+			height:80
+			width:int(self.parent.width*.12)
+
+		Label:
+			id:peers
+			font_size:16
+			color:1,1,1,1
+			background_color:0,.4,0,1
+			size_hint:None,None
+			height:80
+			width:int(self.parent.width*.88)
+
+		Label:
+			text:"Peers"
+			font_size:16
+			color:1,1,1,1
+			background_color:0,.4,0,1
+			size_hint:None,None
+			height:80
+			width:int(self.parent.width*.12)
+
+
+<MyManager>:
+	id:mymanager
