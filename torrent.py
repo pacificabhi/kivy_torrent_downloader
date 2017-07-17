@@ -9,15 +9,13 @@ def get_search(adult, q):
 		q_url=base_url+'/search?f='+q
 	else:
 		q_url=base_url+'/search?f='+q+'&safe=1'
+
 	try:
 		r=requests.get(q_url)
 	except:
-		return {"net_err":['','','',]},["net_err"]
+		return {"Error":['','','',]},["Error"]
 
-	try:
-		soup=BeautifulSoup(r.content)
-	except:
-		return {"soup":['','','']},["soup"]
+	soup=BeautifulSoup(r.content)
 
 	data=dict()
 	titles=list()
