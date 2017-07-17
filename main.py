@@ -1,4 +1,4 @@
-import kivy
+import kivy, threading, time
 kivy.require("1.9.0")
 base_url='https://torrentz2.eu'
 from kivy.app import App
@@ -20,9 +20,25 @@ class Home(Screen):
 	global adult
 	def __init__(self, **kwargs):
 		super(Home, self).__init__(**kwargs)
-		
+
 
 	def serch(self,q):
+		b=Button(text='Searching',background_color=(0.2,0.6,1,0.1))
+		self.popup=Popup(title=q,content=b,size_hint=(1,1),size=(150,150))
+		self.popup.open()
+		self.search_thread=threading.Thread(target=self.search,args=(q,))
+		self.search_thread.start()
+		serch_anim_thread=threading.Thread(target=self.serch_anim,args=())
+		serch_anim_thread.start()
+	 
+	def serch_anim(self):
+		while self.search_thread.is_alive():
+			self.popup.content.background_color[3]+=.1
+			if(self.popup.content.background_color[3]>=1):
+				self.popup.content.background_color[3]=0.1
+			time.sleep(.05)
+
+	def search(self,q):
 		global adult
 		global s_res
 		s_res,titles=get_search(adult,q)
@@ -37,6 +53,8 @@ class Home(Screen):
 				bcb=partial(self.detail,nam)
 				b.bind(on_release=bcb)
 				stack.add_widget(b)
+
+		self.popup.dismiss()
 
 
 	def detail(self,ttl,instance):
@@ -68,12 +86,33 @@ class Details(Screen):
 		self.ids.link_input.text=base_url+s_res[tl][0]
 		self.ids.size.text=s_res[tl][1]
 		self.ids.peers.text=s_res[tl][2]
+		self.ids.seeds.text=s_res[tl][3]
+
 
 	def open_magnet(self):
+		b=Button(text='Starting Download',background_color=(0.2,0.6,1,0.1))
+		self.popup=Popup(title='',content=b,size_hint=(1,1),size=(150,150))
+		self.popup.open()
+		self.magnet_thread=threading.Thread(target=self.search_magnet,args=())
+		self.magnet_thread.start()
+		serch_anim_thread=threading.Thread(target=self.down_anim,args=())
+		serch_anim_thread.start()
+
+
+	def down_anim(self):
+		while self.magnet_thread.is_alive():
+			self.popup.content.background_color[3]+=.1
+			if(self.popup.content.background_color[3]>=1):
+				self.popup.content.background_color[3]=0.1
+			time.sleep(.05)
+
+
+	def search_magnet(self):
 		global tl
 		global s_res
 		link=base_url+s_res[tl][0]
 		chk=down_magnet(link)
+		self.popup.dismiss()
 		try:	
 			popup = Popup(title=chk['title'],content=Label(text=chk['msg']),size_hint=(None, None), size=(300, 150))
 			popup.open()
@@ -84,9 +123,9 @@ class Details(Screen):
 class MyManager(ScreenManager):
 	def __init__(self, **kwargs):
 		super(MyManager, self).__init__(**kwargs)
-		self.add_widget(Home(name="home_name",id="home_id",))
-		self.add_widget(Settings(name="settings_name",id="settings_id",))
-		self.add_widget(Details(name="details_name",id="details_id",))
+		self.add_widget(Home(name="home_name",))
+		self.add_widget(Settings(name="settings_name",))
+		self.add_widget(Details(name="details_name",))
 		self.transition=FadeTransition()
 		self.transition.duration=.18
 		self.current='home_name'

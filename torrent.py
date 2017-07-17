@@ -2,7 +2,6 @@ import requests, os
 from bs4 import BeautifulSoup
 base_url='https://torrentz2.eu'
 
-
 def get_search(adult, q):
 	global base_url
 	if adult is True:
@@ -13,9 +12,9 @@ def get_search(adult, q):
 	try:
 		r=requests.get(q_url)
 	except:
-		return {"Error":['','','',]},["Error"]
+		return {"Error":['','','','']},["Error"]
 
-	soup=BeautifulSoup(r.content)
+	soup=BeautifulSoup(r.content,'lxml')
 
 	data=dict()
 	titles=list()
@@ -25,12 +24,13 @@ def get_search(adult, q):
 			names=list(dat.children)[0].text
 			size=list(list(dat.children)[1].children)[2].text
 			peers=list(list(dat.children)[1].children)[3].text
-			res=[link,size,peers]
+			seeds=list(list(dat.children)[1].children)[4].text
+			res=[link,size,peers,seeds]
 			data[names]=res
 			titles.append(names)
 
 	if not len(data.keys()):
-		return {"No Result":["","",""]},["No Result"]
+		return {"No Result":["","","",""]},["No Result"]
 	return data,titles
 
 
@@ -40,7 +40,7 @@ def down_magnet(link):
 	except:
 		return {"title":"Error","msg":"Check Your Internet"}
 
-	soup=BeautifulSoup(r.content)
+	soup=BeautifulSoup(r.content,'lxml')
 	down_links=dict()
 	for sites in soup.find_all('span'):
 		if(sites.get('class')==['u']):
@@ -53,7 +53,7 @@ def down_magnet(link):
 		magnet=from_monova(down_links['monova.org'])
 	except:
 		try:
-			 magnet=from_piratebay(down_links['thepiratebay.se'])
+			magnet=from_piratebay(down_links['thepiratebay.se'])
 		except:
 			return {"title":"Try Again","msg":"Try Again"}
 
@@ -71,7 +71,7 @@ def from_monova(link):
 		r=requests.get(link)
 	except:
 		return {"title":"Error","msg":"Check Your Internet"}
-	soup=BeautifulSoup(r.content)
+	soup=BeautifulSoup(r.content,'lxml')
 	for i in soup.findAll("a",{"id":"download-file"}):
 		return i.get('href')
 	
@@ -81,6 +81,6 @@ def from_piratebay(link):
 		r=requests.get(link)
 	except:
 		return {"title":"Error","msg":"Check Your Internet"}
-	soup=BeautifulSoup(r.content)
+	soup=BeautifulSoup(r.content,'lxml')
 	for i in soup.findAll("a",{"style":"background-image: url('//thepiratebay.org/static/img/icons/icon-magnet.gif');"}):
 		return i.get('href')

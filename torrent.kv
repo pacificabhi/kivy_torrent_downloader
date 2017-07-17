@@ -5,7 +5,7 @@
 		orientation:'horizontal'
 		canvas:
 			Color:
-				rgba:1,.0,.0,.5
+				rgba:0,.0,.5,.5
 			Rectangle:
 				size:self.size
 				pos:self.pos
@@ -125,7 +125,7 @@
 <Details>:
 	GridLayout:
 		cols:2
-		rows:4
+		rows:5
 		id:detail_box
 		canvas:
 			Color:
@@ -213,6 +213,25 @@
 			size_hint:None,None
 			height:80
 			width:int(self.parent.width*.12)
+
+		Label:
+			id:seeds
+			font_size:16
+			color:1,1,1,1
+			background_color:0,.4,0,1
+			size_hint:None,None
+			height:80
+			width:int(self.parent.width*.88)
+
+		Label:
+			text:"Seeds"
+			font_size:16
+			color:1,1,1,1
+			background_color:0,.4,0,1
+			size_hint:None,None
+			height:80
+			width:int(self.parent.width*.12)
+
 
 
 <MyManager>:
