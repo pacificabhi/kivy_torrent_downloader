@@ -95,8 +95,8 @@ class Details(Screen):
 		self.popup.open()
 		self.magnet_thread=threading.Thread(target=self.search_magnet,args=())
 		self.magnet_thread.start()
-		serch_anim_thread=threading.Thread(target=self.down_anim,args=())
-		serch_anim_thread.start()
+		down_anim_thread=threading.Thread(target=self.down_anim,args=())
+		down_anim_thread.start()
 
 
 	def down_anim(self):
@@ -113,9 +113,12 @@ class Details(Screen):
 		link=base_url+s_res[tl][0]
 		chk=down_magnet(link)
 		self.popup.dismiss()
-		try:	
-			popup = Popup(title=chk['title'],content=Label(text=chk['msg']),size_hint=(None, None), size=(300, 150))
-			popup.open()
+		try:
+			b=Button(text=chk['msg'])
+			pop = Popup(title=chk['title'],size_hint=(None, None), size=(300, 150))
+			b.bind(on_press=pop.dismiss)
+			pop.content=b
+			pop.open()
 		except:
 			pass
 
