@@ -32,11 +32,17 @@ class Home(Screen):
 		serch_anim_thread.start()
 	 
 	def serch_anim(self):
+		flag='+'
 		while self.search_thread.is_alive():
-			self.popup.content.background_color[3]+=.1
-			if(self.popup.content.background_color[3]>=1):
-				self.popup.content.background_color[3]=0.1
-			time.sleep(.05)
+			if(flag=='+'):
+				self.popup.content.background_color[3]+=.1
+				if(self.popup.content.background_color[3]>=1):
+					flag='-'
+			if(flag=='-'):
+				self.popup.content.background_color[3]-=.1
+				if(self.popup.content.background_color[3]<=.1):
+					flag='+'
+			time.sleep(.02)
 
 	def search(self,q):
 		global adult
@@ -49,12 +55,17 @@ class Home(Screen):
 			stack=self.ids['res_stack']
 			stack.clear_widgets()
 			for nam in titles:
-				b=Button(text=nam,size_hint=[1,None],height=60,font_size=18)
+				b=Button(text=nam,size_hint=[.89,None],height=60,font_size=18)
 				bcb=partial(self.detail,nam)
 				b.bind(on_release=bcb)
+				s=Button(text=s_res[nam][1],size_hint=[.11,None],height=60,font_size=18)
 				stack.add_widget(b)
+				stack.add_widget(s)
 
 		self.popup.dismiss()
+
+	def open_magnet(self):
+		pass
 
 
 	def detail(self,ttl,instance):

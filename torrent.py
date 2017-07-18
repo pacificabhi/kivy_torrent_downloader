@@ -19,7 +19,7 @@ def get_search(adult, q):
 	data=dict()
 	titles=list()
 	for dat in soup.find_all('dl'):
-		if len(list(list(dat.children)[1].children))>3 and len(data.keys())<30:
+		if len(list(list(dat.children)[1].children))>4 and len(data.keys())<30:
 			link=list(list(dat.children)[0].children)[0].get('href')
 			names=list(dat.children)[0].text
 			size=list(list(dat.children)[1].children)[2].text
